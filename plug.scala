@@ -32,15 +32,11 @@ class PrintAllMembers(val global: Global) extends Plugin {
       override def name = PrintAllMembers.this.name
       def apply(unit: CompilationUnit) {
         for (b<-unit.body){
-          b match{
-            case md: MemberDef => {
-//              println("md:" + md.name +"\ntype:" + md.symbol.tpe +"\n" )
-//              println("tag:" + md.symbol.tpe.members)
-              println("md:" + md.name )
-              println("line:" + md.pos.line +",colunm:" + md.pos.column)
-            }
-            case _ => 
-          }
+          //this loop will get stackoverflow error, looks like some of them don't have tpe
+              println("\ntype:" + b.symbol.tpe +"\n" )
+//              println("tag:" + b.symbol.tpe.members)
+//              println("b:" + b.name )
+              println("line:" + b.pos.line +",colunm:" + b.pos.column)
         }
       }
     }
