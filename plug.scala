@@ -36,6 +36,8 @@ class PrintAllMembers(val global: Global) extends Plugin {
             case md: MemberDef => {
 //              println("md:" + md.name +"\ntype:" + md.symbol.tpe +"\n" )
 //              println("tag:" + md.symbol.tpe.members)
+              println("md:" + md.name )
+              println("line:" + md.pos.line +",colunm:" + md.pos.column)
             }
             case _ => 
           }
