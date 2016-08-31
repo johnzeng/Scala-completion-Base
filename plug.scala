@@ -26,8 +26,11 @@ class DivByZero(val global: Global) extends Plugin {
       def apply(unit: CompilationUnit) {
         for (b<-unit.body){
           b match{
-            case md: MemberDef => println("md:" + md.name)
-            case _ => println("other")
+            case md: MemberDef => {
+              println("md:" + md.name +"\ntype:" + md.symbol.tpe +"\n" )
+              println("tag:" + md.symbol.tpe.members)
+            }
+            case _ => 
           }
         }
       }
