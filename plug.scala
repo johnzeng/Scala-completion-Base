@@ -12,6 +12,13 @@ class PrintAllMembers(val global: Global) extends Plugin {
   val name = "printMember"
   val description = "print out all defined member's members"
   val components = List[PluginComponent](Component)
+
+  var pos = ""
+  override def processOptions(options: List[String], error: String => Unit) {
+    for (option <- options) {
+      println(option)
+    }
+  }
   
   private object Component extends PluginComponent {
     val global: PrintAllMembers.this.global.type = PrintAllMembers.this.global
@@ -27,8 +34,8 @@ class PrintAllMembers(val global: Global) extends Plugin {
         for (b<-unit.body){
           b match{
             case md: MemberDef => {
-              println("md:" + md.name +"\ntype:" + md.symbol.tpe +"\n" )
-              println("tag:" + md.symbol.tpe.members)
+//              println("md:" + md.name +"\ntype:" + md.symbol.tpe +"\n" )
+//              println("tag:" + md.symbol.tpe.members)
             }
             case _ => 
           }
