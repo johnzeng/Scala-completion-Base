@@ -1,6 +1,6 @@
-run: divbyzero.jar
-	scalac -Xplugin:divbyzero.jar test.scala 
+run: printer.jar
+	scalac -Xplugin:printer.jar test.scala 
 
-divbyzero.jar: plug.scala
+printer.jar: plug.scala
 	fsc -d classes plug.scala
-	cd classes; jar cf ../divbyzero.jar .
+	cd classes; jar cf ../printer.jar .
