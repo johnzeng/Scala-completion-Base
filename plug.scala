@@ -25,7 +25,10 @@ class DivByZero(val global: Global) extends Plugin {
       override def name = DivByZero.this.name
       def apply(unit: CompilationUnit) {
         for (b<-unit.body){
-          println("pos:"+ b.pos +":body:" + b)
+          b match{
+            case md: MemberDef => println("md:" + md.name)
+            case _ => println("other")
+          }
         }
       }
     }
