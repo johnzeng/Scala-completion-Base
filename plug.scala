@@ -13,10 +13,13 @@ class PrintAllMembers(val global: Global) extends Plugin {
   val description = "print out all defined member's members"
   val components = List[PluginComponent](Component)
 
-  var pos = ""
+  var line = 0
+  var col = 0
   override def processOptions(options: List[String], error: String => Unit) {
     for (option <- options) {
-      println(option)
+      val opList = option.split(":")
+      line = opList.head.toInt
+      col = opList.last.toInt
     }
   }
   
@@ -31,12 +34,22 @@ class PrintAllMembers(val global: Global) extends Plugin {
     class PrintMemberPhase(prev: Phase) extends StdPhase(prev) {
       override def name = PrintAllMembers.this.name
       def apply(unit: CompilationUnit) {
-        for (b<-unit.body){
-          //this loop will get stackoverflow error, looks like some of them don't have tpe
-              println("\ntype:" + b.symbol.tpe +"\n" )
-//              println("tag:" + b.symbol.tpe.members)
-//              println("b:" + b.name )
-              println("line:" + b.pos.line +",colunm:" + b.pos.column)
+        def allTrees(tree: Tree): Iterator[Tree] =
+        Iterator(tree, analyzer.macroExpandee(tree)).filter(_ != EmptyTree)
+          .flatMap(t => Iterator(t) ++ t.children.iterator.flatMap(allTrees))
+
+        val treeList = allTrees(unit.body)
+        val matchList = treeList.filter{ t =>
+          t.pos.line <= line && t.pos.column <= col
+        }.toList
+        val aboutLast = matchList filter{ t =>
+          t.pos.line == matchList.last.pos.line &&
+          t.pos.column == matchList.last.pos.column
+        }
+        aboutLast.find{ t =>
+          null != t.symbol && null != t.symbol.tpe
+          }.foreach{ t=>
+          println(t.symbol.tpe.members)
         }
       }
     }
