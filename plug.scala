@@ -41,13 +41,17 @@ class PrintAllMembers(val global: Global) extends Plugin {
         val treeList = allTrees(unit.body)
 
         val matchList = treeList.filter{ t =>
-          null != t.symbol && null != t.symbol.tpe && t.pos.line <= line && t.pos.column <= col
+          null != t.symbol && null != t.symbol.tpe && "" != t.symbol.tpe.toString && t.pos.line <= line && t.pos.column <= col
         }.toList
 
         val aboutLast = matchList filter{ t =>
           t.pos.line == matchList.last.pos.line &&
           t.pos.column == matchList.last.pos.column
         }
+
+//        aboutLast foreach{ t=>
+//          println("sym:" + t.symbol + ":tpe:" + t.symbol.tpe)
+//        }
 
         aboutLast.find{ t =>
           //it is still possible that you don't get any symbol or type at that position
