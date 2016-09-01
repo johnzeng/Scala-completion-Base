@@ -1,6 +1,8 @@
 import java.util
+
 class MyTest{
   def hello() = "hello"
+//  def now() = new Date()
 }
 
 object Test {

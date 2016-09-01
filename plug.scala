@@ -41,8 +41,11 @@ class PrintAllMembers(val global: Global) extends Plugin {
         val treeList = allTrees(unit.body)
 
         val matchList = treeList.filter{ t =>
-//          if(t.pos.line <= line && t.pos.column <= col)
-//            println("sym:" + t.symbol + ":tpe:" + t.symbol.tpe + ":pos:" + t.pos)
+          if(t.pos.line <= line && t.pos.column <= col)
+            t match{
+              case t : PackageDef => {println("package def" + t.stats)}
+              case _ => println(t.getClass)
+            }
 
           null != t.symbol && null != t.symbol.tpe && "" != t.symbol.tpe.toString && t.pos.line <= line && t.pos.column <= col
         }.toList

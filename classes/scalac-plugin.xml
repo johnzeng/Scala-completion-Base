@@ -1,4 +1,4 @@
 <plugin>
-  <name>divbyzero</name>
+  <name>printAllMembers</name>
   <classname>localhost.PrintAllMembers</classname>
 </plugin>
