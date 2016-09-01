@@ -1,5 +1,9 @@
 run: printer.jar
-	scalac -Xplugin:printer.jar -P:printMember:7:8 -nowarn test.scala 
+	scalac -Xplugin:printer.jar -P:printMember:10:8 -nowarn test.scala 
+	scalac -Xplugin:printer.jar -P:printMember:9:23 -nowarn test.scala 
+
+test: printer.jar
+	scalac -Xplugin:printer.jar -P:printMember:1:16 -nowarn test.scala 
 
 printer.jar: plug.scala
 	fsc -d classes plug.scala
