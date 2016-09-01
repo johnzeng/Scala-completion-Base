@@ -23,17 +23,15 @@ object Test {
 run the following command:
 
 ```
-scalac -Xplugin:printer.jar -P:printMember:7:8 test.scala 
+scalac -Xplugin:printer.jar -P:printMember:7:8 -nowarn test.scala 
 ```
+
 p.s.: printer.jar is the jar file created from the plugin, you can run `make printer.jar` to build it if you wanna try this plugin, `-P:printMember:7:8` means that you pass an argument `7:8` to the printMember phase,which is the phase created by our plugin, meaning you wanna see the last symbol's member before line 7, column 8.
 
 output:
 
 ```shell
-scalac -Xplugin:printer.jar -P:printMember:7:8 test.scala
-test.scala:8: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
-  hello
-  ^
+
 Scope{
   def hello(): String;
   def <init>(): MyTest;
@@ -65,6 +63,7 @@ one warning found
 In test.scala, the last symbol before line 7,column 8 is hello, which is an object of MyTest. As you can see at the last scope list, it's printing all the members of  MyTest.
 
 # Log
+- With -nowarn option, we can make the output more clear.
 - We can now print all members according to the line and column number (commit:8adbfd4e22503cca39db016ccbc297c4ebb0b663), and this plugin is officially changed to a project that may be used as a completion plugin for hackable editor.
 - We can now print the members of a defined member (commit:1bde1df047d66140bbc243a77c63825244acec41)
 - We can now print the tree in the compiled file now.Just don't know how to call methods from Global.Tree, looks like it provides some reflact feature, but I don't know how to call it.
