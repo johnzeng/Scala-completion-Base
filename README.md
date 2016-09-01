@@ -1,8 +1,7 @@
 # Scala Completion Basic
 This Project is officially change name to scala-completion-basic. This is a scalac compiler plugin that will print out all useful members if you pass through line number and column number.
 
-~~# ScalaCompilerPluginLab~~
-~~This repo will create nothing, just some log for my scala plugin testing~~
+
 
 # sample
 
@@ -63,6 +62,7 @@ one warning found
 In test.scala, the last symbol before line 7,column 8 is hello, which is an object of MyTest. As you can see at the last scope list, it's printing all the members of  MyTest.
 
 # Log
+- Add support to get import objects (commit:7646c5789369287f99aab859f3466865ebb348ac)
 - With -nowarn option, we can make the output more clear.
 - We can now print all members according to the line and column number (commit:8adbfd4e22503cca39db016ccbc297c4ebb0b663), and this plugin is officially changed to a project that may be used as a completion plugin for hackable editor.
 - We can now print the members of a defined member (commit:1bde1df047d66140bbc243a77c63825244acec41)
