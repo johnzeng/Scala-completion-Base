@@ -26,8 +26,8 @@ class PrintAllMembers(val global: Global) extends Plugin {
   private object Component extends PluginComponent {
     val global: PrintAllMembers.this.global.type = PrintAllMembers.this.global
     val runsAfter = List("refchecks")
-    // Using the Scala Compiler 2.8.x the runsAfter should be written as below
-    // val runsAfter = List[String]("refchecks");
+    // Using the Scala Compiler 2.8.x the runsBefore should be written as below
+    // val runsAfter = "refchecks"
     val phaseName = PrintAllMembers.this.name
     def newPhase(_prev: Phase) = new PrintMemberPhase(_prev)    
     
@@ -39,14 +39,18 @@ class PrintAllMembers(val global: Global) extends Plugin {
           .flatMap(t => Iterator(t) ++ t.children.iterator.flatMap(allTrees))
 
         val treeList = allTrees(unit.body)
+
         val matchList = treeList.filter{ t =>
-          t.pos.line <= line && t.pos.column <= col
+          null != t.symbol && null != t.symbol.tpe && t.pos.line <= line && t.pos.column <= col
         }.toList
+
         val aboutLast = matchList filter{ t =>
           t.pos.line == matchList.last.pos.line &&
           t.pos.column == matchList.last.pos.column
         }
+
         aboutLast.find{ t =>
+          //it is still possible that you don't get any symbol or type at that position
           null != t.symbol && null != t.symbol.tpe
           }.foreach{ t=>
           println(t.symbol.tpe.members)
