@@ -9,6 +9,7 @@ import nsc.plugins.PluginComponent
 class PrintAllMembers(val global: Global) extends Plugin {
   import global._
 
+  val startkey = "asldfkjaslfdlfd"
   val name = "printMember"
   val description = "print out all defined member's members"
   val components = List[PluginComponent](Component)
@@ -42,7 +43,7 @@ class PrintAllMembers(val global: Global) extends Plugin {
         val treeList = allTrees(unit.body)
 
         val matchList = treeList.filter{ t =>
-          null != t.symbol && null != t.symbol.tpe && "" != t.symbol.tpe.toString && t.pos.line <= line && t.pos.column <= col
+          t.pos.line <= line && t.pos.column <= col
           }.toList.sortWith{(a,b) =>
             if(a.pos.line == b.pos.line){
               a.pos.column < b.pos.column
@@ -55,14 +56,40 @@ class PrintAllMembers(val global: Global) extends Plugin {
           t.pos.column == matchList.last.pos.column
         }
 
-        aboutLast.find{ t =>
-          //it is still possible that you don't get any symbol or type at that position
-          null != t.symbol && null != t.symbol.tpe
-          }.foreach{ t=>
-            if(t.symbol.tpe.members.isEmpty)
-              println(t.tpe.members)
-            else
-              println(t.symbol.tpe.members)
+        val (isPackage,sufix) = aboutLast.find{ t=>
+          t.toString.startsWith("import")
+          }match{
+            case None => (false,"")
+            case Some(t) =>{
+              val s =t.toString.split("\\.").last
+              (true, s)
+            } 
+          }
+
+
+        if(isPackage){
+          aboutLast.foreach{ t=>
+              t.symbol.tpe.members.find{_.toString.endsWith(sufix)}.foreach{ m =>
+                println(startkey)
+                println(m.tpe.members)
+                System.exit(0)
+              }
+            }
+        }else{
+          aboutLast.find{ t =>
+            //it is still possible that you don't get any symbol or type at that position
+            null != t.symbol && null != t.symbol.tpe
+            }.foreach{ t=>
+              if(false == t.tpe.members.isEmpty){
+                println(startkey)
+                println(t.tpe.members)
+              }
+              else if(false == t.symbol.tpe.members.isEmpty){
+                println(startkey)
+                println(t.symbol.tpe.members)
+              }
+          }
+
         }
         System.exit(0)
       }

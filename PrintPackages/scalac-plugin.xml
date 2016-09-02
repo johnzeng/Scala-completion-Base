@@ -1,4 +1,0 @@
-<plugin>
-  <name>printAllPackage</name>
-  <classname>localhost.PrintAllPackages</classname>
-</plugin>
