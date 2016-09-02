@@ -1,7 +1,9 @@
 # Scala Completion Basic
 This Project is officially change name to scala-completion-basic. This is a scalac compiler plugin that will print out all useful members if you pass through line number and column number.
 
-
+# supporting vim plugin:
+[scala-complete-vim](https://github.com/Misfit-John/Scala-Completion-vim)
+I am working on this plugin now, but it's still very buggy, and , slow. I think the idea is good , but not really good enough to use as a productive plugin.
 
 # sample
 

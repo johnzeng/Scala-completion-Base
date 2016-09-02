@@ -41,12 +41,6 @@ class PrintAllMembers(val global: Global) extends Plugin {
         val treeList = allTrees(unit.body)
 
         val matchList = treeList.filter{ t =>
-          if(t.pos.line <= line && t.pos.column <= col)
-            t match{
-              case t : PackageDef => {println("package def" + t.stats)}
-              case _ => println(t.getClass)
-            }
-
           null != t.symbol && null != t.symbol.tpe && "" != t.symbol.tpe.toString && t.pos.line <= line && t.pos.column <= col
         }.toList
 
@@ -60,7 +54,7 @@ class PrintAllMembers(val global: Global) extends Plugin {
           //it is still possible that you don't get any symbol or type at that position
           null != t.symbol && null != t.symbol.tpe
           }.foreach{ t=>
-          println(t.symbol.tpe.members)
+            println(t.symbol.tpe.members)
         }
         System.exit(0)
       }

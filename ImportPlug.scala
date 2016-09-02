@@ -35,13 +35,6 @@ class PrintAllPackages(val global: Global) extends Plugin {
       override def name = PrintAllPackages.this.name
       def apply(unit: CompilationUnit) {
         for (t <- unit.body){
-          if (t.pos.line <= line && t.pos.column <= col){
-            if (null != t.symbol && null != t.symbol.tpe){
-              t.symbol.tpe.members.find{_.toString.endsWith(" util")}.foreach{ m =>
-                println(m.tpe.members)
-              }
-            }
-          }
         }
         System.exit(0)
       }
