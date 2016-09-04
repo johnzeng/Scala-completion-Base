@@ -68,12 +68,12 @@ class PrintAllMembers(val global: Global) extends Plugin {
             } 
           }
 
-        println(aboutLast + ":" + ":sufix:" + sufix)
 
         if(isPackage){
           aboutLast.foreach{ t=>
               t.symbol.tpe.members.find{_.toString.endsWith(sufix)}.foreach{ m =>
                 println(startkey)
+                println("Scopes{") 
                 m.tpe.members.map(_.toString).filter{s=>
                   s.startsWith("object") || s.startsWith("class") || s.startsWith("package")
                   }.filter{ s=>
@@ -81,7 +81,9 @@ class PrintAllMembers(val global: Global) extends Plugin {
                     }foreach{member =>
                   println(member) 
                 }
+                println("}") 
                 System.exit(0)
+                
               }
             }
         }else{
