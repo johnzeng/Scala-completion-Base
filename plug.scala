@@ -52,8 +52,10 @@ class PrintAllMembers(val global: Global) extends Plugin {
             }
           }
         val aboutLast = matchList filter{ t =>
-          t.pos.line == matchList.last.pos.line &&
-          t.pos.column == matchList.last.pos.column
+          (t.pos.line == matchList.last.pos.line &&
+          t.toString.startsWith("import")) ||
+          (t.pos.line == matchList.last.pos.line &&
+          t.pos.column == matchList.last.pos.column)
         }
 
         val (isPackage,sufix) = aboutLast.find{ t=>
@@ -66,6 +68,7 @@ class PrintAllMembers(val global: Global) extends Plugin {
             } 
           }
 
+        println(aboutLast + ":" + ":sufix:" + sufix)
 
         if(isPackage){
           aboutLast.foreach{ t=>

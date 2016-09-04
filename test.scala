@@ -1,4 +1,6 @@
 import java.util
+import java.util.
+  UUID
 
 class MyTest{
   def hello() = "hello"
