@@ -74,7 +74,13 @@ class PrintAllMembers(val global: Global) extends Plugin {
           aboutLast.foreach{ t=>
               t.symbol.tpe.members.find{_.toString.endsWith(sufix)}.foreach{ m =>
                 println(startkey)
-                println(m.tpe.members)
+                m.tpe.members.map(_.toString).filter{s=>
+                  s.startsWith("object") || s.startsWith("class") || s.startsWith("package")
+                  }.filter{ s=>
+                    !s.contains("$")
+                    }foreach{member =>
+                  println(member) 
+                }
                 System.exit(0)
               }
             }
