@@ -56,8 +56,10 @@ class PrintAllMembers(val global: Global) extends Plugin {
                 }
               }
             val aboutLast = matchList filter{ t =>
-              t.pos.line == matchList.last.pos.line &&
-              t.pos.column == matchList.last.pos.column
+              (t.pos.line == matchList.last.pos.line &&
+              t.toString.startsWith("import")) ||
+              (t.pos.line == matchList.last.pos.line &&
+              t.pos.column == matchList.last.pos.column)
             }
 
             val (isPackage,sufix) = aboutLast.find{ t=>
@@ -73,12 +75,21 @@ class PrintAllMembers(val global: Global) extends Plugin {
 
             if(isPackage){
               aboutLast.foreach{ t=>
-                  t.symbol.tpe.members.find{_.toString.endsWith(sufix)}.foreach{ m =>
-                    println(startkey)
-                    println(m.tpe.members)
-                    System.exit(0)
+                t.symbol.tpe.members.find{_.toString.endsWith(sufix)}.foreach{ m =>
+                  println(startkey)
+                  println("Scopes{") 
+                  m.tpe.members.map(_.toString).filter{s=>
+                    s.startsWith("object") || s.startsWith("class") || s.startsWith("package")
+                    }.filter{ s=>
+                      !s.contains("$")
+                      }foreach{member =>
+                    println(member) 
                   }
+                  println("}") 
+                  System.exit(0)
                 }
+              }
+              System.exit(0)
             }else{
               aboutLast.find{ t =>
                 //it is still possible that you don't get any symbol or type at that position
@@ -93,10 +104,7 @@ class PrintAllMembers(val global: Global) extends Plugin {
                     println(t.symbol.tpe.members)
                   }
               }
-
-            }
             System.exit(0)
-
           }
           case _ =>{
             //should print all symbol, line and members
