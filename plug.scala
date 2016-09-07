@@ -104,7 +104,8 @@ class PrintAllMembers(val global: Global) extends Plugin {
                     println(t.symbol.tpe.members)
                   }
               }
-            System.exit(0)
+              System.exit(0)
+            }
           }
           case _ =>{
             //should print all symbol, line and members
