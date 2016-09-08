@@ -62,6 +62,8 @@ class PrintAllMembers(val global: Global) extends Plugin {
               t.pos.column == matchList.last.pos.column)
             }
 
+
+
             val (isPackage,sufix) = aboutLast.find{ t=>
               t.toString.startsWith("import")
               }match{
@@ -77,7 +79,7 @@ class PrintAllMembers(val global: Global) extends Plugin {
               aboutLast.foreach{ t=>
                 t.symbol.tpe.members.find{_.toString.endsWith(sufix)}.foreach{ m =>
                   println(startkey)
-                  println("Scopes{") 
+                  println("Scope{") 
                   m.tpe.members.map(_.toString).filter{s=>
                     s.startsWith("object") || s.startsWith("class") || s.startsWith("package")
                     }.filter{ s=>
@@ -111,8 +113,8 @@ class PrintAllMembers(val global: Global) extends Plugin {
             //should print all symbol, line and members
             val sortedList = treeList.toList.filter{t=> 
               ( !t.toString.startsWith("package <empty>") &&
-                !t.toString.startsWith("scala.AnyRef") &&
-                t.toString != "<empty>" &&
+//                !t.toString.startsWith("scala.AnyRef") &&
+//                t.toString != "<empty>" &&
                 null !=t.symbol &&
                 null != t.symbol.tpe && 
                 false == t.symbol.tpe.members.isEmpty &&
@@ -125,6 +127,11 @@ class PrintAllMembers(val global: Global) extends Plugin {
                 a.pos.line < b.pos.line
               }
             }
+            
+//            sortedList foreach{t => 
+//              println(t.pos.line + ":" + t.pos.column)
+//              println(t.symbol.tpe)
+//            }
             def printAll(index:Int,lastPrintLine:Int,lastPrintCol:Int,lastImportLine:Int,lastImportStr:String){
               if(index >= sortedList.size){
                 return
@@ -134,12 +141,12 @@ class PrintAllMembers(val global: Global) extends Plugin {
                 printAll(index + 1, lastPrintLine,lastPrintCol,lastImportLine, lastImportStr)
               }else{
                 if (t.pos.line == lastImportLine){
-                  //handle import print here
+                  //@Todo:handle import print here
                   printAll(index+1, lastPrintLine,lastPrintCol, lastImportLine, lastImportStr)
                 }else if(t.toString.startsWith("import")){
                   printAll(index+1, lastPrintLine,lastPrintCol,t.pos.line, t.toString.split(" ").last)
                 }else{
-                  println(s"${t.toString}:${t.pos.line}:${t.pos.column}")
+                  println(s"${t.toString}:${t.pos.line}:${t.pos.column}:${t.pos.start}:${t.pos.end}")
                   println(t.symbol.tpe.members)
                   printAll(index+1,t.pos.line,t.pos.column,lastImportLine, lastImportStr)
                 }

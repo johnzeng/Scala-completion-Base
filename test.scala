@@ -1,10 +1,9 @@
-import java.util
-import java.util.
-  UUID
+import java.util.Date
+import java.util.UUID
 
 class MyTest{
   def hello() = "hello"
-//  def now() = new Date()
+  def now() = new Date()
 }
 
 object Test {
@@ -12,5 +11,5 @@ object Test {
   val hello = new MyTest()
   val amount = five / 1
   val test = Seq(1,2,3,4)
-  test.map{ t => t+1 }.foreach(println _)
+  test.map{ t => t+1 }.foreach{t => println(t)}
 }
