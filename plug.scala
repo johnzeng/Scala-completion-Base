@@ -55,15 +55,39 @@ class PrintAllMembers(val global: Global) extends Plugin {
                   a.pos.line < b.pos.line
                 }
               }
+//            matchList foreach {t => 
+//              println("")
+//              println(t)
+//              println(t.pos.column)
+//              println(t.symbol)
+//              println(t.tpe)
+//              println(t.getClass)
+//            }
             val aboutLast = matchList filter{ t =>
               (t.pos.line == matchList.last.pos.line &&
               t.toString.startsWith("import")) ||
               (t.pos.line == matchList.last.pos.line &&
               t.pos.column == matchList.last.pos.column)
             }
+            
+//            aboutLast foreach {t => 
+//              println(t)
+//              println(t.symbol)
+//              println(t.tpe)
+//              println(t.getClass)
+//            }
 
-
-
+            if(aboutLast.size == 1){
+              val lastSym = aboutLast.last
+              lastSym match{
+                case t :Literal => {
+                  println(startkey)
+                  println(t.tpe.members)
+                  System.exit(0)
+                }
+                case _ => {}
+              }
+            }
             val (isPackage,sufix) = aboutLast.find{ t=>
               t.toString.startsWith("import")
               }match{
