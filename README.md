@@ -64,6 +64,8 @@ one warning found
 In test.scala, the last symbol before line 7,column 8 is hello, which is an object of MyTest. As you can see at the last scope list, it's printing all the members of  MyTest.
 
 # Log
+- If you wanna get completion for a function call, you should set your cursor to the begin of the brace or bracket, not the end(this is tricky but I haven't found a good way to avoid it so far)
+- Add support to get completion for literal (commit:37ed92c8d534292aadf9b6fc8ef4b954f57e5e95)
 - Add support to get import objects (commit:7646c5789369287f99aab859f3466865ebb348ac)
 - With -nowarn option, we can make the output more clear.
 - We can now print all members according to the line and column number (commit:8adbfd4e22503cca39db016ccbc297c4ebb0b663), and this plugin is officially changed to a project that may be used as a completion plugin for hackable editor.
