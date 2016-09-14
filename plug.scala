@@ -30,7 +30,7 @@ class PrintAllMembers(val global: Global) extends Plugin {
     val global: PrintAllMembers.this.global.type = PrintAllMembers.this.global
 //    val runsAfter = List("refchecks")
     val runsAfter = List("parser")
-    // Using the Scala Compiler 2.8.x the runsBefore should be written as below
+    // Using the Scala Compiler below 2.8.0 the runsAfter should be written as below
     // val runsAfter = "refchecks"
     val phaseName = PrintAllMembers.this.name
     def newPhase(_prev: Phase) = new PrintMemberPhase(_prev)    
@@ -55,27 +55,19 @@ class PrintAllMembers(val global: Global) extends Plugin {
                   a.pos.line < b.pos.line
                 }
               }
-//            matchList foreach {t => 
-//              println("")
-//              println(t)
-//              println(t.pos.column)
-//              println(t.symbol)
-//              println(t.tpe)
-//              println(t.getClass)
-//            }
+
+            matchList foreach{t => 
+              println(t)
+              println(t.pos.line)
+              println(t.pos.column)
+              println(t)
+            }
             val aboutLast = matchList filter{ t =>
               (t.pos.line == matchList.last.pos.line &&
               t.toString.startsWith("import")) ||
               (t.pos.line == matchList.last.pos.line &&
               t.pos.column == matchList.last.pos.column)
             }
-            
-//            aboutLast foreach {t => 
-//              println(t)
-//              println(t.symbol)
-//              println(t.tpe)
-//              println(t.getClass)
-//            }
 
             if(aboutLast.size == 1){
               val lastSym = aboutLast.last
@@ -98,6 +90,7 @@ class PrintAllMembers(val global: Global) extends Plugin {
                 } 
               }
 
+            aboutLast foreach(println(_))
 
             if(isPackage){
               aboutLast.foreach{ t=>
@@ -120,25 +113,30 @@ class PrintAllMembers(val global: Global) extends Plugin {
               aboutLast.find{ t =>
                 //it is still possible that you don't get any symbol or type at that position
                 null != t.symbol && null != t.symbol.tpe
+                (t.pos.line == matchList.last.pos.line &&
+                t.pos.column == matchList.last.pos.column)
                 }.foreach{ t=>
-                  if(false == t.tpe.members.isEmpty){
-                    println(startkey)
-                    println(t.tpe.members)
+                  val tpeVal = if(false == t.tpe.members.isEmpty){
+                    t.tpe
                   }
                   else if(false == t.symbol.tpe.members.isEmpty){
-                    println(startkey)
-                    println(t.symbol.tpe.members)
+                    t.symbol.tpe
                   }
+                  else{
+                    t.tpe
+                  }
+                  //ok, look for the implicit members
+                  println(startkey)
+                  println(tpeVal.members)
               }
               System.exit(0)
             }
           }
+          //I don't care about all symbol now,it's useless in current stage
           case _ =>{
             //should print all symbol, line and members
             val sortedList = treeList.toList.filter{t=> 
               ( !t.toString.startsWith("package <empty>") &&
-//                !t.toString.startsWith("scala.AnyRef") &&
-//                t.toString != "<empty>" &&
                 null !=t.symbol &&
                 null != t.symbol.tpe && 
                 false == t.symbol.tpe.members.isEmpty &&
@@ -152,10 +150,6 @@ class PrintAllMembers(val global: Global) extends Plugin {
               }
             }
             
-//            sortedList foreach{t => 
-//              println(t.pos.line + ":" + t.pos.column)
-//              println(t.symbol.tpe)
-//            }
             def printAll(index:Int,lastPrintLine:Int,lastPrintCol:Int,lastImportLine:Int,lastImportStr:String){
               if(index >= sortedList.size){
                 return
