@@ -47,7 +47,7 @@ class PrintAllMembers(val global: Global) extends Plugin {
         (line, col) match{
           case (Some(line),Some(col)) =>{
             val matchList = treeList.filter{ t =>
-              t.pos.line <= line && t.pos.column <= col
+              t.pos.line < line ||(t.pos.line == line && t.pos.column <= col) 
               }.toList.sortWith{(a,b) =>
                 if(a.pos.line == b.pos.line){
                   a.pos.column < b.pos.column
@@ -60,7 +60,13 @@ class PrintAllMembers(val global: Global) extends Plugin {
               println(t)
               println(t.pos.line)
               println(t.pos.column)
-              println(t)
+              if (null != t.symbol){
+                println(t.symbol)
+                println(t.symbol.fullName)
+              }
+              if(null != t.tpe){
+                println(t.tpe)
+              }
             }
             val aboutLast = matchList filter{ t =>
               (t.pos.line == matchList.last.pos.line &&

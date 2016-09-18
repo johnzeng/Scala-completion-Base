@@ -14,14 +14,12 @@ object Test {
   val test = Seq(1,2,3,4)
   test.map{ t => t+1 }.foreach{t => println(t)}
   1 to 2  
-  implicit class get(s:String){
-    def getTest() = 123
+  implicit class ImplicitGet(s:String){
+    def implicitGetTest() = 123
   }
   
-  "hello".getTest()
-  implicit def str2int(str:String) = new MyTest()
+  implicit def implicitStr2int(str:String) = new MyTest()
   
-  "hello".now()
   hello.test(1,"hello")
   val list = 1 to 1000 by 3 
 }
