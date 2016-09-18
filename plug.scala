@@ -56,21 +56,10 @@ class PrintAllMembers(val global: Global) extends Plugin {
                 }
               }
 
-            matchList foreach{t => 
-              println(t)
-              println(t.pos.line)
-              println(t.pos.column)
-              if (null != t.symbol){
-                println(t.symbol)
-                println(t.symbol.fullName)
-              }
-              if(null != t.tpe){
-                println(t.tpe)
-              }
-            }
             val aboutLast = matchList filter{ t =>
               (t.pos.line == matchList.last.pos.line &&
               t.toString.startsWith("import")) ||
+              t.toString.startsWith("implicit") ||
               (t.pos.line == matchList.last.pos.line &&
               t.pos.column == matchList.last.pos.column)
             }
@@ -95,8 +84,6 @@ class PrintAllMembers(val global: Global) extends Plugin {
                   (true, s)
                 } 
               }
-
-            aboutLast foreach(println(_))
 
             if(isPackage){
               aboutLast.foreach{ t=>
@@ -131,9 +118,24 @@ class PrintAllMembers(val global: Global) extends Plugin {
                   else{
                     t.tpe
                   }
-                  //ok, look for the implicit members
                   println(startkey)
                   println(tpeVal.members)
+                  //ok, look for the implicit members
+                  matchList filter{ 
+                    case d:DefDef => {
+                      d.vparamss.size > 0 && d.vparamss.head.size > 0 &&
+                      d.toString.startsWith("implicit")
+                    }
+                    case _ => false
+                    } foreach{ 
+                    case d:DefDef =>{
+                      val paramTpe =d.vparamss.head.head.symbol.tpe
+                      if(tpeVal <:< d.vparamss.head.head.symbol.tpe){
+                        println(d.rhs.tpe.members)
+                      }
+                    }
+                    case _ =>
+                  }
               }
               System.exit(0)
             }
